@@ -1,6 +1,6 @@
 ---
 title: WebChat
-emoji: 💩
+emoji: 🌍
 colorFrom: pink
 colorTo: purple
 sdk: gradio
