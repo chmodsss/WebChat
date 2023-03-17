@@ -1,5 +1,6 @@
 import openai
 import logging
+import nltkmodules
 import gradio as gr
 
 from langchain import OpenAI
