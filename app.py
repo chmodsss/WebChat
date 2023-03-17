@@ -1,6 +1,5 @@
 import openai
 import logging
-import nltkmodules
 import gradio as gr
 
 from langchain import OpenAI
@@ -18,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 models_list = ['text-ada-001', 'text-curie-001', 'text-babbage-001']
 global model, index, temperature
-
+model = models_list[0]
+temperature = 0
 
 def get_url_data(url):
     global model
@@ -59,6 +59,9 @@ def predict(history, query):
     history = history + [(query, result.response)]
     return history
 
+def set_api_key(key):
+    openai.api_key = key
+    return "API key loaded..."
 
 def set_model(sel_model):
     global model
@@ -99,10 +102,13 @@ with demo:
         send_chat.click(predict, [chatbot, msg], chatbot)
 
     with gr.Tab(label='Settings'):
+        sel_api = gr.Textbox(label="OPENAI_API_KEY", placeholder="Enter OpenAI API key here...")
         sel_model = gr.Dropdown(label='Select the Model',
                                 choices=models_list, value=models_list[0])
-        model_status = gr.Markdown("No Model selected")
         sel_temperature = gr.Slider(0, 1, value=0, step=0.1, label='Set the temperature')
+        api_key_status = gr.Markdown("No API key given...")
+        model_status = gr.Markdown("Chosen Model: text-ada-001 (default)")
+        sel_api.submit(set_api_key, sel_api, api_key_status)
         sel_model.change(set_model, sel_model, model_status)
         sel_temperature.change(set_temperature, sel_temperature, None)
 
